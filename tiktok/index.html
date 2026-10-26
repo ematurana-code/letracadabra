@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Conexión con TikTok · Letracadabra</title>
+  <link rel="icon" href="../img/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+  <header class="cabecera">
+    <div class="contenido">
+      <img src="../img/logo.png" alt="" width="44" height="44">
+      <a class="marca" href="../">Letra<span>cadabra</span></a>
+    </div>
+  </header>
+  <main>
+    <div class="contenido tarjeta">
+      <h1 id="titulo">Conexión con TikTok</h1>
+      <p id="mensaje">Esta página recibe la autorización de TikTok para Letracadabra Publicador.</p>
+      <p><code id="codigo" translate="no"></code></p>
+      <p><button id="copiar" type="button" hidden>Copiar código</button></p>
+    </div>
+  </main>
+  <footer>
+    <a href="../">Inicio</a>
+    <a href="../privacidad.html">Privacidad</a>
+    <a href="../terminos.html">Condiciones de uso</a>
+  </footer>
+  <script>
+    // TikTok vuelve aquí con ?code=…&state=… (o ?error=…). El código se copia en la herramienta, que lo canjea por el permiso.
+    const q = new URLSearchParams(location.search);
+    const codigo = q.get("code");
+    const $ = (id) => document.getElementById(id);
+    if (codigo) {
+      $("titulo").textContent = "¡Listo! TikTok autorizó la conexión";
+      $("mensaje").textContent = "Copia este código y pégalo en la herramienta. Vence en pocos minutos.";
+      $("codigo").textContent = codigo;
+      $("copiar").hidden = false;
+      $("copiar").onclick = async () => {
+        try { await navigator.clipboard.writeText(codigo); $("copiar").textContent = "Copiado"; } catch {}
+      };
+    } else if (q.get("error")) {
+      $("titulo").textContent = "No se completó la conexión";
+      $("mensaje").textContent = "TikTok respondió: " + (q.get("error_description") || q.get("error"));
+    }
+  </script>
+</body>
+</html>
